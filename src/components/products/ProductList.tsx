@@ -16,9 +16,10 @@ import {
 
 interface ProductListProps {
   products: Product[];
+  onProductClick?: (product: Product) => void;
 }
 
-export function ProductList({ products }: ProductListProps) {
+export function ProductList({ products, onProductClick }: ProductListProps) {
   return (
     <Card>
       <CardContent className="p-0">
@@ -44,7 +45,10 @@ export function ProductList({ products }: ProductListProps) {
                   <Checkbox />
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center space-x-3">
+                  <div 
+                    className="flex items-center space-x-3 cursor-pointer"
+                    onClick={() => onProductClick && onProductClick(product)}
+                  >
                     <div className="h-12 w-12 rounded-md overflow-hidden bg-gray-100 border border-gray-200 flex-shrink-0">
                       <img
                         src={product.image}
@@ -79,13 +83,18 @@ export function ProductList({ products }: ProductListProps) {
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end space-x-2">
-                    <Button variant="ghost" size="icon">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={() => onProductClick && onProductClick(product)}
+                    >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    <Button variant="ghost" size="icon">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={() => window.open(product.permalink, "_blank")}
+                    >
                       <ArrowUpRight className="h-4 w-4" />
                     </Button>
                   </div>
@@ -99,11 +108,15 @@ export function ProductList({ products }: ProductListProps) {
   );
 }
 
-export function ProductGrid({ products }: ProductListProps) {
+export function ProductGrid({ products, onProductClick }: ProductListProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
       {products.map((product) => (
-        <Card key={product.id} className="overflow-hidden hover:shadow-md transition-shadow duration-300">
+        <Card 
+          key={product.id} 
+          className="overflow-hidden hover:shadow-md transition-shadow duration-300 cursor-pointer"
+          onClick={() => onProductClick && onProductClick(product)}
+        >
           <div className="aspect-square relative bg-gray-100">
             <img
               src={product.image}
@@ -134,11 +147,27 @@ export function ProductGrid({ products }: ProductListProps) {
                 <span>{product.sku}</span>
               </div>
               <div className="flex space-x-1">
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onProductClick) onProductClick(product);
+                  }}
+                >
                   <Edit className="h-4 w-4" />
                 </Button>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Copy className="h-4 w-4" />
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="h-8 w-8"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(product.permalink, "_blank");
+                  }}
+                >
+                  <ArrowUpRight className="h-4 w-4" />
                 </Button>
               </div>
             </div>

@@ -12,6 +12,26 @@ export interface Product {
   description: string;
   sold: number;
   views: number;
+  gtin?: string;
+  manufacturing_time?: number;
+  variations?: ProductVariation[];
+}
+
+export interface ProductVariation {
+  id: string;
+  attribute_combinations: Array<{
+    id: string;
+    name: string;
+    value_id: string;
+    value_name: string;
+  }>;
+  price: number;
+  available_quantity: number;
+  sold_quantity: number;
+  picture_ids: string[];
+  seller_custom_field?: string;
+  catalog_product_id?: string;
+  gtin?: string;
 }
 
 export interface Order {
@@ -60,3 +80,12 @@ export interface RegionData {
   sales: number;
   percentage: number;
 }
+
+export interface MercadoLibreCredentials {
+  client_id: string;
+  client_secret: string;
+  access_token: string;
+  refresh_token: string;
+  user_id: string;
+}
+
